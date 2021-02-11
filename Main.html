@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./static/css/main.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+<div id="application">
+    <h1>Movie Review</h1>
+    <ul>
+    <li v-for="(movie, index) in movies" :key="movie.id">
+        <input type="number" class="quantity" v-model.number="movie.rating">
+        <span>{{movie.title}}</span>
+        <button type="button" class="btn btn-primary submit" v-on:click="deleteMovie(index)">Remove Movie</button>
+
+    </li>
+    </ul>
+    <h1>Average ratings for all movies: {{averageRating}}</h1>
+
+    <form id="addmovie-form" @submit.prevent="addMovie">
+        <div class="form-group">
+            <label for="title">Title of Movie:</label>
+            <br></br>
+            <input class="form_control" id="title" onfocus="this.value=''">
+            <br></br>
+            <label for="rating">Ratings:</label>
+            <input type="number" class="form-control" id="rating"  min="0" max="5" onfocus="this.value=''">
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-primary">Add a movie</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    const application = new Vue({
+        el: '#application',
+        data: {
+            pageName: "This is Vue.js",
+            movies: []
+        },
+        computed: {
+            averageRating: function () {
+                return this.movies.reduce((sum, movie) => {
+                    return sum + movie.rating;
+                }, 0)/this.movies.length;
+            }
+        },
+        methods: {
+            addMovie: function() {
+                console.log("addmovie()");
+
+                const addBookForm = document.getElementById('addmovie-form');
+                const titleInput = addBookForm.querySelector('input[id=title]');
+                const quantityInput = addBookForm.querySelector('input[id=rating]');
+
+                this.movies.push({"id": this.movies.len, "title": titleInput.value, "rating": parseInt(quantityInput.value, 10)})
+            },
+            deleteMovie: function(index) {
+                console.log("deleteMovie() was called ", index);
+                this.movies.splice(index, 1);
+            }
+        },
+    });
+</script>
+
+</body>
+</html>
